@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Tebak Titik — Tembalang / UNDIP</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#EDE7D8;        /* kertas peta lawas */
+    --paper-2:#E4DCC8;      /* panel sedikit lebih gelap */
+    --ink:#1B2A24;          /* tinta pinus, hampir hitam kehijauan */
+    --slate:#586B5F;        /* teks sekunder */
+    --line:#C6BBA0;         /* garis kontur / pembatas */
+    --survey:#DD4B1A;       /* oranye bendera surveyor: tebakan + aksi utama */
+    --survey-d:#B93B12;
+    --verify:#1D6E57;       /* hijau-teal: titik asli + benar */
+    --shadow:0 2px 0 rgba(27,42,36,.12);
+    --r:14px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%}
+  body{
+    font-family:'Space Grotesk',system-ui,sans-serif;
+    color:var(--ink);
+    background:var(--paper);
+    background-image:
+      radial-gradient(circle at 20% 30%, rgba(198,187,160,.35) 0, transparent 45%),
+      radial-gradient(circle at 85% 70%, rgba(198,187,160,.3) 0, transparent 40%),
+      repeating-linear-gradient(0deg, transparent 0 39px, rgba(198,187,160,.25) 39px 40px);
+    overflow:hidden;
+  }
+  .mono{font-family:'Space Mono',monospace}
+
+  /* ---------- App shell ---------- */
+  #app{height:100%;display:flex;flex-direction:column;max-width:1200px;margin:0 auto;position:relative}
+
+  /* ---------- Top instrument bar ---------- */
+  .bar{
+    display:flex;align-items:center;gap:12px;
+    padding:10px 16px;border-bottom:1.5px solid var(--line);
+    background:var(--paper);
+  }
+  .brand{display:flex;flex-direction:column;line-height:1;margin-right:auto}
+  .brand b{font-size:16px;font-weight:700;letter-spacing:.02em}
+  .brand span{font-size:10px;letter-spacing:.28em;color:var(--slate);text-transform:uppercase;margin-top:3px}
+  .gauge{
+    font-family:'Space Mono',monospace;text-align:right;line-height:1.05;
+    border-left:1.5px solid var(--line);padding-left:12px;
+  }
+  .gauge .k{font-size:9px;letter-spacing:.2em;color:var(--slate);text-transform:uppercase}
+  .gauge .v{font-size:16px;font-weight:700}
+
+  /* ---------- Screens ---------- */
+  .screen{flex:1;min-height:0;position:relative}
+  .hidden{display:none!important}
+
+  /* ---------- Start screen ---------- */
+  #start{overflow-y:auto;padding:26px 18px 30px;display:flex;flex-direction:column;align-items:center}
+  .hero{max-width:640px;width:100%;text-align:center;margin-bottom:8px}
+  .eyebrow{
+    display:inline-flex;gap:8px;align-items:center;font-family:'Space Mono',monospace;
+    font-size:11px;letter-spacing:.24em;color:var(--survey);text-transform:uppercase;
+    border:1.5px solid var(--survey);border-radius:100px;padding:4px 12px;margin-bottom:18px;
+  }
+  .eyebrow::before{content:"◎"}
+  h1{font-size:clamp(34px,8vw,58px);font-weight:700;letter-spacing:-.02em;line-height:.98}
+  h1 .slash{color:var(--survey)}
+  .lead{color:var(--slate);font-size:15px;margin:14px auto 0;max-width:460px;line-height:1.5}
+  .coordtag{font-family:'Space Mono',monospace;font-size:11px;color:var(--slate);margin-top:10px;letter-spacing:.05em}
+
+  .levels{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;max-width:640px;width:100%;margin:28px 0 22px}
+  .level{
+    text-align:left;background:var(--paper-2);border:1.5px solid var(--line);border-radius:var(--r);
+    padding:16px 14px;cursor:pointer;transition:.15s;position:relative;overflow:hidden;
+  }
+  .level:hover{transform:translateY(-2px);border-color:var(--ink)}
+  .level.on{border-color:var(--survey);background:#F3ECDB;box-shadow:inset 0 0 0 1.5px var(--survey)}
+  .level .num{font-family:'Space Mono',monospace;font-size:11px;color:var(--slate);letter-spacing:.15em}
+  .level h3{font-size:18px;margin:6px 0 4px}
+  .level p{font-size:12px;color:var(--slate);line-height:1.4}
+  .level .radius{font-family:'Space Mono',monospace;font-size:11px;margin-top:10px;color:var(--survey);font-weight:700}
+  .level.on .radius{color:var(--survey-d)}
+
+  .btn{
+    font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:15px;
+    border:none;border-radius:100px;padding:14px 30px;cursor:pointer;transition:.15s;
+    display:inline-flex;align-items:center;gap:9px;
+  }
+  .btn-primary{background:var(--survey);color:#fff;box-shadow:0 3px 0 var(--survey-d)}
+  .btn-primary:hover{transform:translateY(-1px);box-shadow:0 4px 0 var(--survey-d)}
+  .btn-primary:active{transform:translateY(2px);box-shadow:0 1px 0 var(--survey-d)}
+  .btn-primary:disabled{background:var(--line);box-shadow:0 3px 0 #b3a988;cursor:not-allowed;color:#f3ecdb}
+  .btn-ghost{background:transparent;color:var(--ink);border:1.5px solid var(--ink)}
+  .btn-ghost:hover{background:var(--ink);color:var(--paper)}
+
+  .howto{max-width:640px;width:100%;margin-top:26px;border-top:1.5px dashed var(--line);padding-top:18px}
+  .howto b{font-size:11px;letter-spacing:.2em;color:var(--slate);text-transform:uppercase;font-weight:700}
+  .howto ol{list-style:none;counter-reset:s;margin-top:12px;display:grid;gap:8px}
+  .howto li{counter-increment:s;font-size:13.5px;color:var(--ink);padding-left:30px;position:relative;line-height:1.45}
+  .howto li::before{
+    content:counter(s,decimal-leading-zero);position:absolute;left:0;top:0;
+    font-family:'Space Mono',monospace;font-size:11px;color:var(--survey);font-weight:700;
+  }
+
+  /* ---------- Game screen ---------- */
+  #game{display:flex;flex-direction:column}
+  .stage{flex:1;min-height:0;display:grid;grid-template-columns:1fr 1fr;gap:0}
+  .photo-wrap{position:relative;background:#0e1712;overflow:hidden;display:flex;align-items:center;justify-content:center}
+  .photo-wrap img{width:100%;height:100%;object-fit:cover;display:block}
+  .photo-tag{
+    position:absolute;top:12px;left:12px;font-family:'Space Mono',monospace;
+    font-size:11px;letter-spacing:.15em;color:#EDE7D8;background:rgba(14,23,18,.72);
+    padding:5px 10px;border-radius:100px;border:1px solid rgba(237,231,216,.25);
+  }
+  .photo-credit{position:absolute;bottom:10px;right:10px;font-size:9px;letter-spacing:.04em;color:#EDE7D8;background:rgba(14,23,18,.62);padding:3px 8px;border-radius:6px;border:1px solid rgba(237,231,216,.18)}
+  .hint{
+    position:absolute;bottom:12px;left:12px;right:12px;font-size:12.5px;color:#EDE7D8;
+    background:rgba(14,23,18,.72);padding:9px 12px;border-radius:10px;line-height:1.4;
+    border:1px solid rgba(237,231,216,.18);
+  }
+  .hint b{color:var(--survey);font-weight:700}
+  .hint-btn{position:absolute;bottom:12px;left:12px;z-index:6;font-family:'Space Grotesk',sans-serif;
+    font-size:12px;font-weight:600;color:#EDE7D8;background:rgba(14,23,18,.72);
+    border:1px solid rgba(237,231,216,.35);border-radius:100px;padding:8px 14px;cursor:pointer;transition:.15s}
+  .hint-btn:hover{background:var(--survey);border-color:var(--survey);transform:translateY(-1px)}
+  .hint-note{margin:-4px 0 12px;font-family:'Space Mono',monospace;font-size:11px;color:var(--survey);letter-spacing:.02em}
+
+  .map-wrap{position:relative}
+  #map{position:absolute;inset:0;background:var(--paper-2)}
+  .map-hud{
+    position:absolute;top:12px;left:12px;z-index:500;font-family:'Space Mono',monospace;
+    font-size:11px;color:var(--ink);background:rgba(237,231,216,.9);padding:6px 10px;
+    border-radius:8px;border:1.5px solid var(--line);letter-spacing:.03em;pointer-events:none;
+  }
+  .confirm-dock{
+    position:absolute;left:12px;right:12px;bottom:12px;z-index:500;display:flex;gap:10px;
+  }
+  .confirm-dock .btn{flex:1;justify-content:center;box-shadow:0 3px 0 var(--survey-d)}
+
+  /* ---------- Reveal panel ---------- */
+  .reveal{
+    position:absolute;left:12px;right:12px;bottom:12px;z-index:600;
+    background:var(--paper);border:1.5px solid var(--ink);border-radius:var(--r);
+    padding:16px;box-shadow:0 8px 24px rgba(27,42,36,.28);
+  }
+  .reveal .verdict{font-size:20px;font-weight:700;display:flex;align-items:center;gap:8px}
+  .reveal .verdict .dot{width:11px;height:11px;border-radius:50%;background:var(--verify)}
+  .reveal .place{color:var(--slate);font-size:13px;margin-top:2px}
+  .reveal .stats{display:flex;gap:20px;margin:14px 0;font-family:'Space Mono',monospace}
+  .reveal .stat .k{font-size:9px;letter-spacing:.2em;color:var(--slate);text-transform:uppercase}
+  .reveal .stat .v{font-size:22px;font-weight:700}
+  .reveal .stat .v.pts{color:var(--survey)}
+  .reveal .btn{width:100%;justify-content:center}
+
+  /* ---------- Final screen ---------- */
+  #final{overflow-y:auto;padding:30px 18px;display:flex;flex-direction:column;align-items:center;text-align:center}
+  .final-score{font-family:'Space Mono',monospace;font-size:clamp(56px,16vw,110px);font-weight:700;line-height:1;color:var(--survey)}
+  .final-max{font-family:'Space Mono',monospace;color:var(--slate);font-size:16px;margin-top:2px}
+  .grade{font-size:22px;font-weight:700;margin:14px 0 4px}
+  .breakdown{max-width:480px;width:100%;margin:22px 0;text-align:left}
+  .row{
+    display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--line);
+    font-size:14px;
+  }
+  .row .n{font-family:'Space Mono',monospace;color:var(--slate);font-size:12px;width:26px}
+  .row .nm{flex:1}
+  .row .d{font-family:'Space Mono',monospace;color:var(--slate);font-size:12px}
+  .row .p{font-family:'Space Mono',monospace;font-weight:700;width:64px;text-align:right}
+
+  /* Leaflet marker labels */
+  .pin-guess,.pin-actual{border-radius:50%;border:2.5px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.4)}
+  .pin-guess{background:var(--survey)}
+  .pin-actual{background:var(--verify)}
+
+  /* ---------- Responsive ---------- */
+  @media(max-width:760px){
+    .stage{grid-template-columns:1fr;grid-template-rows:38% 62%}
+    .levels{grid-template-columns:1fr;gap:10px}
+    .level{display:flex;align-items:center;gap:12px}
+    .level h3{margin:0}
+    .level .info{flex:1}
+    .level .radius{margin-top:0}
+    .gauge .v{font-size:14px}
+  }
+  @media(max-width:400px){
+    .bar{padding:9px 12px;gap:8px}
+    .brand b{font-size:14px}
+  }
+</style>
+</head>
+<body>
+<div id="app">
+  <!-- Instrument bar -->
+  <div class="bar">
+    <div class="brand">
+      <b>TEBAK&nbsp;TITIK</b>
+      <span>Tembalang · UNDIP</span>
+    </div>
+    <div class="gauge" id="gaugeRound">
+      <div class="k">Ronde</div>
+      <div class="v">—</div>
+    </div>
+    <div class="gauge" id="gaugeScore">
+      <div class="k">Skor</div>
+      <div class="v">0</div>
+    </div>
+  </div>
+
+  <!-- START -->
+  <div class="screen" id="start">
+    <div class="hero">
+      <div class="eyebrow">Survei Lapangan</div>
+      <h1>Kenal seberapa <span class="slash">dalam</span><br>kampusmu?</h1>
+      <p class="lead">Lihat cuplikan foto di sekitar Tembalang & UNDIP, lalu tancapkan tebakanmu di peta. Makin dekat ke titik asli, makin tinggi skormu.</p>
+      <div class="coordtag mono">−7.0505°, 110.4405° · radius ± 2 km</div>
+    </div>
+
+    <div class="levels" id="levels">
+      <div class="level on" data-diff="mudah">
+        <div class="info">
+          <div class="num mono">LVL·01</div>
+          <h3>Mudah</h3>
+          <p>Landmark ikonik. Penilaian jarak dilonggarkan.</p>
+        </div>
+        <div class="radius mono">skala 450 m</div>
+      </div>
+      <div class="level" data-diff="menengah">
+        <div class="info">
+          <div class="num mono">LVL·02</div>
+          <h3>Menengah</h3>
+          <p>Sudut yang agak umum. Petunjuk masih ada.</p>
+        </div>
+        <div class="radius mono">skala 220 m</div>
+      </div>
+      <div class="level" data-diff="sulit">
+        <div class="info">
+          <div class="num mono">LVL·03</div>
+          <h3>Sulit</h3>
+          <p>Pojok tersembunyi. Tanpa petunjuk, skor ketat.</p>
+        </div>
+        <div class="radius mono">skala 110 m</div>
+      </div>
+    </div>
+
+    <button class="btn btn-primary" id="startBtn">Mulai 5 ronde →</button>
+
+    <div class="howto">
+      <b>Cara main</b>
+      <ol>
+        <li>Amati foto di sisi kiri — perhatikan bangunan, jalan, papan nama, pepohonan.</li>
+        <li>Klik / ketuk peta di sisi kanan untuk menaruh penanda tebakan.</li>
+        <li>Tekan <em>Kunci tebakan</em>. Garis akan menunjukkan seberapa meleset kamu.</li>
+        <li>Kumpulkan skor tertinggi dari 5 ronde.</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- GAME -->
+  <div class="screen hidden" id="game">
+    <div class="stage">
+      <div class="photo-wrap">
+        <img id="photo" alt="Cuplikan lokasi">
+        <div class="photo-tag mono" id="photoTag">FOTO 1/5</div>
+        <div class="photo-credit mono" id="photoCredit">Foto: Google Maps</div>
+        <button class="hint-btn hidden" id="hintBtn">Petunjuk (-50% poin)</button>
+        <div class="hint hidden" id="hint"></div>
+      </div>
+      <div class="map-wrap">
+        <div id="map"></div>
+        <div class="map-hud mono" id="mapHud">Klik peta untuk menebak</div>
+        <div class="confirm-dock" id="confirmDock">
+          <button class="btn btn-primary" id="confirmBtn" disabled>Kunci tebakan</button>
+        </div>
+        <div class="reveal hidden" id="reveal">
+          <div class="verdict"><span class="dot"></span><span id="verdictText">—</span></div>
+          <div class="place" id="revealPlace">—</div>
+          <div class="stats">
+            <div class="stat"><div class="k">Meleset</div><div class="v mono" id="revealDist">— m</div></div>
+            <div class="stat"><div class="k">Poin</div><div class="v pts mono" id="revealPts">0</div></div>
+          </div>
+          <div class="hint-note hidden" id="hintNote">Poin dipotong 50% karena memakai petunjuk.</div>
+          <button class="btn btn-primary" id="nextBtn">Ronde berikutnya →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FINAL -->
+  <div class="screen hidden" id="final">
+    <div class="eyebrow" style="margin-bottom:14px">Hasil Survei</div>
+    <div class="final-score mono" id="finalScore">0</div>
+    <div class="final-max mono" id="finalMax">/ 5000 poin</div>
+    <div class="grade" id="grade">—</div>
+    <div class="breakdown" id="breakdown"></div>
+    <button class="btn btn-primary" id="againBtn">Main lagi</button>
+    <button class="btn btn-ghost" id="changeBtn" style="margin-top:10px">Ganti tingkat kesulitan</button>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="data.js"></script>
+<script>
+/* =========================================================================
+   DATA LOKASI  —  ganti / tambah sesukamu.
+   Setiap lokasi: { name, lat, lng, img, hint }
+   - lat/lng : koordinat titik ASLI tempat foto diambil.
+   - img     : URL foto. Kosongkan ("") untuk pakai placeholder sementara.
+   - hint    : petunjuk singkat (tampil di Mudah & Menengah, disembunyikan di Sulit).
+
+   ⚠️ Koordinat di bawah masih PERKIRAAN — sesuaikan dengan titik foto aslimu.
+   ========================================================================= */
+const LOCATIONS = (typeof window!=='undefined' && window.LOCATIONS) ? window.LOCATIONS : { mudah:[], menengah:[], sulit:[] };
+
+/* Skala peluruhan skor per tingkat (meter). Kecil = penilaian makin ketat. */
+const SCALE = { mudah:450, menengah:220, sulit:110 };
+const ROUNDS = 5;
+const AREA_CENTER = [-7.0505, 110.4405];
+const AREA_BOUNDS = [[-7.075,110.415],[-7.030,110.468]]; // diubah ke LatLngBounds saat peta dibuat
+
+/* ---------- Placeholder foto (dipakai bila img kosong) ---------- */
+function placeholder(i, label){
+  const c=['#2f4b6e','#3a5a40','#6d4a34','#4a3b6b','#2f5d62','#7a4a2e'][i%6];
+  const L2=(label||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  const lines=[...Array(7)].map((_,k)=>`<path d='M0 ${60+k*80} Q200 ${30+k*80} 400 ${70+k*80} T800 ${45+k*80}'/>`).join('');
+  const svg=`<svg xmlns='http://www.w3.org/2000/svg' width='800' height='600'>`+
+    `<rect width='800' height='600' fill='${c}'/>`+
+    `<g stroke='rgba(255,255,255,.10)' fill='none' stroke-width='2'>${lines}</g>`+
+    `<g transform='translate(400 250)' fill='none' stroke='rgba(255,255,255,.85)' stroke-width='6' stroke-linejoin='round'>`+
+      `<rect x='-54' y='-28' width='108' height='72' rx='10'/>`+
+      `<circle cx='0' cy='8' r='22'/>`+
+      `<path d='M-32 -28 l10 -16 h44 l10 16'/>`+
+    `</g>`+
+    `<text x='400' y='372' font-family='monospace' font-size='30' letter-spacing='6' fill='rgba(255,255,255,.9)' text-anchor='middle'>SLOT FOTO</text>`+
+    `<text x='400' y='410' font-family='monospace' font-size='20' fill='rgba(255,255,255,.7)' text-anchor='middle'>${L2}</text>`+
+    `<text x='400' y='448' font-family='monospace' font-size='13' letter-spacing='2' fill='rgba(255,255,255,.5)' text-anchor='middle'>tempel foto lokasi di dalam file</text>`+
+  `</svg>`;
+  return 'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg);
+}
+
+/* ---------- State ---------- */
+let map, guessMarker, actualMarker, line;
+let state = { diff:'mudah', rounds:[], idx:0, total:0, results:[], guess:null, locked:false, hintUsed:false };
+
+/* ---------- Init peta ---------- */
+function initMap(){
+  map = L.map('map',{ zoomControl:true, maxBounds:L.latLngBounds(AREA_BOUNDS), maxBoundsViscosity:.9, minZoom:14, maxZoom:18 })
+        .setView(AREA_CENTER,15);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+    attribution:'&copy; OpenStreetMap contributors', maxZoom:19, subdomains:'abc'
+  }).addTo(map);
+  map.on('click', e=>{ if(!state.locked) placeGuess(e.latlng); });
+}
+function dot(cls){ return L.divIcon({className:'', html:`<div class="${cls}" style="width:16px;height:16px"></div>`, iconSize:[16,16], iconAnchor:[8,8]}); }
+
+/* ---------- Utility ---------- */
+function haversine(a,b,c,d){ const R=6371000,t=x=>x*Math.PI/180;
+  const dLat=t(c-a),dLng=t(d-b),
+    h=Math.sin(dLat/2)**2+Math.cos(t(a))*Math.cos(t(c))*Math.sin(dLng/2)**2;
+  return 2*R*Math.asin(Math.sqrt(h));
+}
+function scoreFor(dist,diff){ return Math.round(1000*Math.exp(-dist/SCALE[diff])); }
+function shuffle(arr){ const a=[...arr]; for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]];} return a; }
+function fmtDist(m){ return m>=1000 ? (m/1000).toFixed(2)+' km' : Math.round(m)+' m'; }
+const $=id=>document.getElementById(id);
+
+/* ---------- Flow ---------- */
+function startGame(){
+  if(typeof L==="undefined"){ alert("Peta gagal dimuat. Periksa koneksi internet lalu buka ulang halaman."); return; }
+  const pool=LOCATIONS[state.diff]||[];
+  if(pool.length===0){ alert('Belum ada lokasi untuk tingkat "'+state.diff+'". Tambahkan foto lalu jalankan: npm run build'); return; }
+  state.rounds = shuffle(pool).slice(0,ROUNDS);
+  state.idx=0; state.total=0; state.results=[];
+  $('start').classList.add('hidden'); $('final').classList.add('hidden'); $('game').classList.remove('hidden');
+  $('gaugeScore').querySelector('.v').textContent='0';
+  if(!map){ initMap(); } setTimeout(()=>map.invalidateSize(),120);
+  loadRound();
+}
+
+function loadRound(){
+  const loc=state.rounds[state.idx];
+  state.guess=null; state.locked=false;
+  // reset peta
+  if(guessMarker){map.removeLayer(guessMarker);guessMarker=null;}
+  if(actualMarker){map.removeLayer(actualMarker);actualMarker=null;}
+  if(line){map.removeLayer(line);line=null;}
+  map.setView(AREA_CENTER,15);
+  // foto
+  const ph=placeholder(state.idx, loc.name);
+  const imgEl=$('photo');
+  imgEl.referrerPolicy='no-referrer';
+  imgEl.onerror=()=>{ imgEl.onerror=null; imgEl.src=ph; if($('photoCredit')) $('photoCredit').style.display='none'; };
+  const hasImg = loc.img && loc.img.trim();
+  imgEl.src = hasImg ? loc.img : ph;
+  $('photoTag').textContent = `FOTO ${state.idx+1}/${state.rounds.length}`;
+  if($('photoCredit')) $('photoCredit').style.display = hasImg ? 'block' : 'none';
+  // petunjuk kini berupa tombol; memakainya memotong poin ronde ini 50%
+  state.hintUsed=false;
+  $('hint').classList.add('hidden');
+  if(loc.hint) $('hintBtn').classList.remove('hidden');
+  else $('hintBtn').classList.add('hidden');
+  // ui
+  $('reveal').classList.add('hidden');
+  $('confirmDock').classList.remove('hidden');
+  $('confirmBtn').disabled=true;
+  $('mapHud').textContent='Klik peta untuk menebak';
+  $('gaugeRound').querySelector('.v').textContent=`${state.idx+1}/${state.rounds.length}`;
+}
+
+function placeGuess(latlng){
+  state.guess=latlng;
+  if(guessMarker) guessMarker.setLatLng(latlng);
+  else guessMarker=L.marker(latlng,{icon:dot('pin-guess')}).addTo(map);
+  $('confirmBtn').disabled=false;
+  $('mapHud').textContent=`Tebakan: ${latlng.lat.toFixed(5)}, ${latlng.lng.toFixed(5)}`;
+}
+
+function confirmGuess(){
+  if(!state.guess) return;
+  state.locked=true;
+  const loc=state.rounds[state.idx];
+  const dist=haversine(state.guess.lat,state.guess.lng,loc.lat,loc.lng);
+  let pts=scoreFor(dist,state.diff);
+  if(state.hintUsed) pts=Math.round(pts*0.5);
+  state.total+=pts;
+  state.results.push({name:loc.name,dist,pts});
+
+  // titik asli + garis
+  actualMarker=L.marker([loc.lat,loc.lng],{icon:dot('pin-actual')}).addTo(map);
+  line=L.polyline([[state.guess.lat,state.guess.lng],[loc.lat,loc.lng]],
+      {color:'#DD4B1A',weight:2.5,dashArray:'2,7'}).addTo(map);
+  map.fitBounds(line.getBounds().pad(.6));
+
+  // verdict
+  let v; if(dist<50)v='Tepat sekali!'; else if(dist<150)v='Sangat dekat'; else if(dist<400)v='Lumayan dekat'; else if(dist<900)v='Meleset'; else v='Jauh meleset';
+  $('verdictText').textContent=v;
+  $('revealPlace').textContent=loc.name;
+  $('revealDist').textContent=fmtDist(dist);
+  $('revealPts').textContent=pts.toLocaleString('id-ID');
+  $('hintNote').classList.toggle('hidden', !state.hintUsed);
+  $('gaugeScore').querySelector('.v').textContent=state.total.toLocaleString('id-ID');
+  $('hintBtn').classList.add('hidden');
+  $('confirmDock').classList.add('hidden');
+  $('reveal').classList.remove('hidden');
+  $('nextBtn').textContent = state.idx>=state.rounds.length-1 ? 'Lihat hasil →' : 'Ronde berikutnya →';
+  $('mapHud').textContent=`Asli: ${loc.lat.toFixed(5)}, ${loc.lng.toFixed(5)}`;
+}
+
+function nextRound(){
+  if(state.idx>=state.rounds.length-1){ endGame(); return; }
+  state.idx++; loadRound();
+}
+
+function endGame(){
+  $('game').classList.add('hidden'); $('final').classList.remove('hidden');
+  $('finalScore').textContent=state.total.toLocaleString('id-ID');
+  $('finalMax').textContent='/ '+(state.rounds.length*1000).toLocaleString('id-ID')+' poin';
+  const pct=state.total/(state.rounds.length*1000);
+  let g; if(pct>=.9)g='Surveyor Ulung 🧭'; else if(pct>=.7)g='Warga Sejati'; else if(pct>=.5)g='Cukup Hafal'; else if(pct>=.3)g='Masih Nyasar'; else g='Anak Baru 👀';
+  $('grade').textContent=g;
+  $('breakdown').innerHTML=state.results.map((r,i)=>
+    `<div class="row"><span class="n mono">${String(i+1).padStart(2,'0')}</span>
+     <span class="nm">${r.name}</span>
+     <span class="d mono">${fmtDist(r.dist)}</span>
+     <span class="p mono">${r.pts.toLocaleString('id-ID')}</span></div>`).join('');
+}
+
+/* ---------- Bind ---------- */
+$('levels').addEventListener('click',e=>{
+  const el=e.target.closest('.level'); if(!el)return;
+  document.querySelectorAll('.level').forEach(l=>l.classList.remove('on'));
+  el.classList.add('on'); state.diff=el.dataset.diff;
+});
+$('hintBtn').addEventListener('click',()=>{
+  const loc=state.rounds[state.idx];
+  if(!loc||!loc.hint||state.locked) return;
+  state.hintUsed=true;
+  $('hint').innerHTML=`<b>Petunjuk:</b> ${loc.hint}`;
+  $('hint').classList.remove('hidden');
+  $('hintBtn').classList.add('hidden');
+});
+$('startBtn').addEventListener('click',startGame);
+$('confirmBtn').addEventListener('click',confirmGuess);
+$('nextBtn').addEventListener('click',nextRound);
+$('againBtn').addEventListener('click',startGame);
+$('changeBtn').addEventListener('click',()=>{ $('final').classList.add('hidden'); $('start').classList.remove('hidden'); $('gaugeRound').querySelector('.v').textContent='—'; $('gaugeScore').querySelector('.v').textContent='0'; });
+</script>
+</body>
+</html>

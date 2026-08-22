@@ -1,0 +1,13 @@
+{
+  "name": "tebak-titik-undip",
+  "version": "1.0.0",
+  "description": "GeoGuessr sederhana area Tembalang & UNDIP",
+  "private": true,
+  "scripts": {
+    "build": "node build.js",
+    "serve": "npx --yes serve ."
+  },
+  "dependencies": {
+    "exifr": "^7.1.3"
+  }
+}
