@@ -1,12 +1,86 @@
 {
-  "20260824_125138.jpg": { "name": "Dekat Gerbang UNDIP" },
-  "20260824_125628.jpg": { "name": "Waduk / Embung UNDIP" },
-  "20260824_125851.jpg": { "name": "Toko KPRI UNDIP" },
-  "20260824_131047.jpg": { "name": "Gerbang Universitas Diponegoro", "lat": -7.050832, "lng": 110.435966, "hint": "Koordinat perkiraan (interpolasi) - tolong koreksi jika meleset." },
-  "20260824_131435.jpg": { "name": "Gedung Fakultas UNDIP" },
-  "20260824_131909.jpg": { "name": "Gerbang Utama UNDIP (Widya Puraya)" },
-  "20260824_132015.jpg": { "name": "Gedung UNDIP Press" },
-  "20260824_132504.jpg": { "name": "Magister Teknik Lingkungan UNDIP" },
-  "20260824_133403.jpg": { "name": "Waduk UNDIP (dekat FPIK)" },
-  "20260824_133645.jpg": { "name": "Rusunawa UNDIP" }
+  "20260824_124516.jpg": {
+    "name": "Teknik Sipil UNDIP"
+  },
+  "20260824_124958.jpg": {
+    "name": "Bunderan UNDIP"
+  },
+  "20260824_125138.jpg": {
+    "name": "Rusunawa UNDIP"
+  },
+  "20260824_125346.jpg": {
+    "name": "Stadion UNDIP"
+  },
+  "20260824_125514.jpg": {
+    "name": "Waduk / Embung UNDIP"
+  },
+  "20260824_125628.jpg": {
+    "name": "Waduk / Embung UNDIP (2)"
+  },
+  "20260824_125851.jpg": {
+    "name": "Rusunawa UNDIP (2)"
+  },
+  "20260824_130215.jpg": {
+    "name": "Bunderan UNDIP (2)"
+  },
+  "20260824_130342.jpg": {
+    "name": "Bunderan UNDIP (3)"
+  },
+  "20260824_130627.jpg": {
+    "name": "Teknik Sipil UNDIP (2)"
+  },
+  "20260824_130940.jpg": {
+    "name": "Dekanat Fakultas Teknik"
+  },
+  "20260824_131047.jpg": {
+    "name": "Dekanat Fakultas Teknik (2)",
+    "lat": -7.050832,
+    "lng": 110.435966,
+    "hint": "Koordinat perkiraan (interpolasi) - tolong koreksi jika meleset."
+  },
+  "20260824_131153.jpg": {
+    "name": "Perpustakaan UNDIP"
+  },
+  "20260824_131435.jpg": {
+    "name": "SPBU Pertamina UNDIP"
+  },
+  "20260824_131635.jpg": {
+    "name": "Perpustakaan UNDIP (2)"
+  },
+  "20260824_131733.jpg": {
+    "name": "Perpustakaan UNDIP (3)"
+  },
+  "20260824_131909.jpg": {
+    "name": "Widya Puraya (Rektorat)"
+  },
+  "20260824_132015.jpg": {
+    "name": "Perpustakaan UNDIP (4)"
+  },
+  "20260824_132141.jpg": {
+    "name": "Gedung Kuliah Bersama FT"
+  },
+  "20260824_132337.jpg": {
+    "name": "Gedung Kuliah Bersama FT (2)"
+  },
+  "20260824_132504.jpg": {
+    "name": "Gedung Kuliah Bersama FT (3)"
+  },
+  "20260824_132626.jpg": {
+    "name": "Gedung Kuliah Bersama FT (4)"
+  },
+  "20260824_132954.jpg": {
+    "name": "FPIK UNDIP",
+    "lat": -7.04902,
+    "lng": 110.441221,
+    "hint": "Koordinat perkiraan (interpolasi) - tolong koreksi jika meleset."
+  },
+  "20260824_133403.jpg": {
+    "name": "Fak. Ekonomika & Bisnis"
+  },
+  "20260824_133645.jpg": {
+    "name": "FPIK UNDIP (2)"
+  },
+  "20260824_133741.jpg": {
+    "name": "FPIK UNDIP (3)"
+  }
 }
