@@ -1,28 +1,73 @@
 // File ini DIHASILKAN otomatis oleh build.js — jangan diedit manual.
-// (Ini data contoh bawaan; akan ditimpa saat kamu menjalankan: npm run build)
-window.LOCATIONS = {
-  mudah: [
-    { name:"Widya Puraya (Rektorat)", lat:-7.0492826, lng:110.4383814, img:"https://lh3.googleusercontent.com/place-photos/AG9NLjAs9p3XyINi-9WTqfCY_usXHzOyoX__x5HvIVjYYszfh6Cavx880M_vXsqwsIT8n2RPaLIgV9PPRKOS9grmTis2-GVUrMw80YeLe6x-37KC3pjRp1f2XJ2el09YQVDnMQ3kAOiVeIfi7rnz=s1600-w800-h600", hint:"Halaman ikonik depan gedung rektorat & perpustakaan." },
-    { name:"Masjid Kampus UNDIP", lat:-7.0551738, lng:110.4370363, img:"https://lh3.googleusercontent.com/place-photos/AG9NLjAOTaIST36KnIilY6wMAK7luf-Bk--JeNuyLfmV0T9ijc3EUZ1hp8KcAPIB8eivSeLWJT_33L3xYcrLfOnkCEc343Y6xOKizS6OqafRrDFTbsqpOoVct0XvHiRUdv1DtTwRPZQ62VJXyCQ6Iak=s1600-w800-h600", hint:"Masjid besar berkubah di tepi Jl. Prof. Soedarto." },
-    { name:"Waduk / Embung UNDIP", lat:-7.0527451, lng:110.4456046, img:"https://lh3.googleusercontent.com/place-photos/AG9NLjCLKiSIwuJM3aurpMyqJG_i7JzGCcUed-GMAabL9FNCdyj4_UcsxL9RhqWGTE8MIRwd5ztfoMNIyxy6F3IvX2O9YhH6q7aklQTtbT_lIZftppKJ9sUzxogqvwg-KhIVpKOzG18QimYuGVfIMA=s1600-w800-h600", hint:"Waduk pendidikan, tempat jogging & mancing." },
-    { name:"Stadion UNDIP", lat:-7.0546816, lng:110.4458515, img:"https://lh3.googleusercontent.com/place-photos/AG9NLjBKmriWDwf7fOxNG-obvx7eHxLMStQg-V3gf-f8mY9Yn3o6WQCsPI9-KnR0T3XpXnos9_Kun_wHG3iRuMf4Z_6z_cTCX3Z7ONV8AVGKHpfpyT7yaaj49DnnuWkd6XITQE029U74IbbXQoqEPg=s1600-w800-h600", hint:"Stadion dengan lintasan atletik & tribun." },
-    { name:"Bunderan UNDIP", lat:-7.0561535, lng:110.4391738, img:"https://lh3.googleusercontent.com/place-photos/AG9NLjCdzh8dsHqf49Y8tnjndX-iVYiOKH49BfDjO99a8vgdY1QI_Ko_hPznEIk4sn-b1QSYwYhtUI-8GmWmq7Jx3JS0XzVUDjZVhrb_MtS_oVkFiXL913XgZyzyfsqakuoDMDTl4Hkj7S1hKlVcLg=s1600-w800-h600", hint:"Bundaran ramai di gerbang masuk kampus." },
-    { name:"Perpustakaan UNDIP", lat:-7.0483571, lng:110.4378301, img:"https://lh3.googleusercontent.com/place-photos/AG9NLjDZrLJwTSPWMFwG9LTs6LUnWkdJEOcBniRjiQBkXVkN4y2QyUHSl5FOAO1lrzFML_UxRZHNwmTI29c6SgUB_D1En7u316Y8mzGfCghVOQmfd5t6-0UzXRt7IbNAb3MOn3YQ39u5n8JJoXgoiw=s1600-w800-h600", hint:"Gedung perpustakaan pusat & UNDIP Press." }
-  ],
-  menengah: [
-    { name:"Dekanat Fakultas Teknik", lat:-7.050595, lng:110.4385896, img:"https://lh3.googleusercontent.com/place-photos/AG9NLjAJq2KR8XwvE3NbXYtNiJRnqCww2uaPze2X-GeUqNmfzwjFh_j8go8zcVZ2e0U1toINmpg35jYBWqOHDz2a0lLAwv5H5LDpyWxy8Gbl-dC6FE20hnuPH_O_YhEy2efJWMlQH_S0Or8dVJsuPg=s1600-w800-h600", hint:"Gedung Prof. Eko Budihardjo, dekanat FT." },
-    { name:"Teknik Sipil UNDIP", lat:-7.0522304, lng:110.439057, img:"https://lh3.googleusercontent.com/place-photos/AG9NLjCLrlPnuYBLlk3PMfPs3FLWTBVrXYrpIfgxbEfSoheFuqJ5_Z5r9wJwOiNGHUgREol5WHPpew3fWkQZhLhtKOUca22ccVqo2EtkTSJgzjN1w6hGN517aIYQ_gO49vo0wwrvRWOPTce2XN32=s1600-w800-h600", hint:"Departemen Teknik Sipil, gedung lawas." },
-    { name:"Fak. Ekonomika & Bisnis", lat:-7.0470759, lng:110.4417576, img:"https://lh3.googleusercontent.com/place-photos/AG9NLjBDvVvJxnvEeWoxZzzwGc7e_J5IEVaxOkZPYqxXv1bWSfQ7OZVLUo0DREg-GmHuhaUmRhZyx4-G6THS66_hCg7I3j9QDC9Ef26AAWLHYBE9tNHNleSKn-zK5DFCXL8tfrxWQF-9_PbFWPaRmUw=s1600-w800-h600", hint:"Kompleks FEB di sisi timur laut." },
-    { name:"RS Nasional Diponegoro", lat:-7.047819, lng:110.4437708, img:"https://lh3.googleusercontent.com/place-photos/AG9NLjBUCEKLAn2j51ptWDQ7AUvm7Z8lPjuv7IwAJn7Se3jYCGOpm0jRdzmXWWqhPYzbPxveAiBt6lmv76qz6EWzW1kPlzPe6abnQyp9qjri6kkkwiTHJkJKFx7bfsl2FYgLNWy_FpgSEXNiVQsVMA=s1600-w800-h600", hint:"Rumah sakit besar milik UNDIP." },
-    { name:"Fakultas Kedokteran", lat:-7.049451, lng:110.4445978, img:"https://lh3.googleusercontent.com/place-photos/AG9NLjDAu_JU3nswYHvZy_1gTfhJej2lwp2ttoeMwfyjvNFQCcVP3fUp4PO9f5eqN87VoTK4a3pya7Z7jCMtnkY70bVH7V7AHlYJv9WlSRv8QxbBQ6UiRJN7NR6-B56BTJgczV3QcqUmedeRX-cj=s1600-w800-h600", hint:"Kompleks FK dekat RSND." },
-    { name:"Gedung Kuliah Bersama FT", lat:-7.0506183, lng:110.4401831, img:"https://lh3.googleusercontent.com/place-photos/AG9NLjBxIs_0fDpeum9D53i19RDw2EXQ9x6xOhB6XU0nfLJJ4tf0XqxtwxQsVADCd_cI3sHkyWVpqNtmvuRuKRDasf81hQkaWbe-TVSOACIE88pyKZYUq3MMX3qFfxRTqRfK20BXXq-uh7VZ3k6HFxE=s1600-w800-h600", hint:"Ruang kuliah bersama Fakultas Teknik." }
-  ],
-  sulit: [
-    { name:"FPIK UNDIP", lat:-7.0504446, lng:110.4424751, img:"https://lh3.googleusercontent.com/place-photos/AG9NLjBiPVjJwY9mOoeZeTeUbCB5rsPK2mur77KZOKjaceaJbntc5qLLsHDMUMlHPH6QUeL6ZIG-50SWcXIfYx-gJ5bFSlaR1_hy34VK0rHpdmt4bjXtkGHVBm_48A-QA_xwYnNSPBHYBLodDUmIQg=s1600-w800-h600", hint:"" },
-    { name:"Rusunawa UNDIP", lat:-7.0547675, lng:110.4436454, img:"", hint:"" },
-    { name:"Jalan Banjarsari", lat:-7.0596115, lng:110.4387921, img:"https://lh3.googleusercontent.com/place-photos/AG9NLjCRpCSAP8TpryctMR-I6_hLKPTmymiyGKcQ3t8f45KF0jD5YPduQRsjCtdG2eZAyIgtCk-w0b2_IuvmgSYHXYNa6FWE97-i5LUrx1u0SHzZnFJoRqaXKXboASk9-TS1GzDc2ZntWikQtpnNXA=s1600-w800-h600", hint:"" },
-    { name:"Taman Inspirasi", lat:-7.0499554, lng:110.4387438, img:"https://lh3.googleusercontent.com/place-photos/AG9NLjDm2p-9_J8TvTiR7_126YaRJy4599J7q3uVfScPnfCTFNFZO89hd7EcujdjebzFgO2S1vBJxpKoN_E4pUuya3GXFWpt_5kSYtmPRA_5HHTnddeLFUT_MGt3Glq5gvGJHMhD8xxbfjTNokylCaE=s1600-w800-h600", hint:"" },
-    { name:"SPBU Pertamina UNDIP", lat:-7.0545672, lng:110.432564, img:"https://lh3.googleusercontent.com/place-photos/AG9NLjCiVtiR0zlztxvhEENFH3xM_6sujcWVCZP-vRWLcM3CM4VJWI8u1WpWi-VjDKr0LsZGq98OkXYbc-_H92vaOLvZkr3T7o0JhwPplQADkdq8r-06EodeqGAbbgu55TPH8yIScIvjuE2J5603dJD1yX3n=s1600-w800-h600", hint:"" },
-    { name:"Bendungan Undip", lat:-7.0527295, lng:110.4451687, img:"https://lh3.googleusercontent.com/place-photos/AG9NLjDAflCA6Lb26jPOvv-iBacAyOQl-bGwD1PrylrNc6wg0uEzP4O98JMhMIeHVaVHdPaQz4UTtJiNLWT_HVKjGT4Fp1R8sACiigZXmxbIXYaosENJHTAM_DSjVBjK-KtVhP0f32OzdlqDJuJybA=s1600-w800-h600", hint:"" }
-  ]
-};
+window.LOCATIONS = [
+  {
+    "name": "Dekat Gerbang UNDIP",
+    "lat": -7.055095,
+    "lng": 110.442716,
+    "img": "photos/20260824_125138.jpg",
+    "hint": ""
+  },
+  {
+    "name": "Waduk / Embung UNDIP",
+    "lat": -7.052582,
+    "lng": 110.446185,
+    "img": "photos/20260824_125628.jpg",
+    "hint": ""
+  },
+  {
+    "name": "Toko KPRI UNDIP",
+    "lat": -7.054871,
+    "lng": 110.443446,
+    "img": "photos/20260824_125851.jpg",
+    "hint": ""
+  },
+  {
+    "name": "Gerbang Universitas Diponegoro",
+    "lat": -7.050832,
+    "lng": 110.435966,
+    "img": "photos/20260824_131047.jpg",
+    "hint": "Koordinat perkiraan (interpolasi) - tolong koreksi jika meleset."
+  },
+  {
+    "name": "Gedung Fakultas UNDIP",
+    "lat": -7.053145,
+    "lng": 110.432526,
+    "img": "photos/20260824_131435.jpg",
+    "hint": ""
+  },
+  {
+    "name": "Gerbang Utama UNDIP (Widya Puraya)",
+    "lat": -7.049358,
+    "lng": 110.438458,
+    "img": "photos/20260824_131909.jpg",
+    "hint": ""
+  },
+  {
+    "name": "Gedung UNDIP Press",
+    "lat": -7.048549,
+    "lng": 110.437946,
+    "img": "photos/20260824_132015.jpg",
+    "hint": ""
+  },
+  {
+    "name": "Magister Teknik Lingkungan UNDIP",
+    "lat": -7.050837,
+    "lng": 110.439859,
+    "img": "photos/20260824_132504.jpg",
+    "hint": ""
+  },
+  {
+    "name": "Waduk UNDIP (dekat FPIK)",
+    "lat": -7.047664,
+    "lng": 110.441975,
+    "img": "photos/20260824_133403.jpg",
+    "hint": ""
+  },
+  {
+    "name": "Rusunawa UNDIP",
+    "lat": -7.049453,
+    "lng": 110.442775,
+    "img": "photos/20260824_133645.jpg",
+    "hint": ""
+  }
+];

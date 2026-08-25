@@ -1,9 +1,12 @@
 {
-  "_contoh_mudah_Masjid Kampus.jpg": {
-    "lat": -7.0551738,
-    "lng": 110.4370363,
-    "name": "Masjid Kampus UNDIP",
-    "difficulty": "mudah",
-    "hint": "Isi ini hanya jika foto TIDAK punya geotag / ingin koreksi manual."
-  }
+  "20260824_125138.jpg": { "name": "Dekat Gerbang UNDIP" },
+  "20260824_125628.jpg": { "name": "Waduk / Embung UNDIP" },
+  "20260824_125851.jpg": { "name": "Toko KPRI UNDIP" },
+  "20260824_131047.jpg": { "name": "Gerbang Universitas Diponegoro", "lat": -7.050832, "lng": 110.435966, "hint": "Koordinat perkiraan (interpolasi) - tolong koreksi jika meleset." },
+  "20260824_131435.jpg": { "name": "Gedung Fakultas UNDIP" },
+  "20260824_131909.jpg": { "name": "Gerbang Utama UNDIP (Widya Puraya)" },
+  "20260824_132015.jpg": { "name": "Gedung UNDIP Press" },
+  "20260824_132504.jpg": { "name": "Magister Teknik Lingkungan UNDIP" },
+  "20260824_133403.jpg": { "name": "Waduk UNDIP (dekat FPIK)" },
+  "20260824_133645.jpg": { "name": "Rusunawa UNDIP" }
 }
