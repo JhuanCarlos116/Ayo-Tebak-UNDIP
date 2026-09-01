@@ -65,8 +65,10 @@ mengubah `AREA_BOUNDS`/`minZoom`/`maxZoom` di `index.html` (lalu samakan juga di
 ## Berkas penting
 - `index.html` — game-nya.
 - `data.js` — **dihasilkan otomatis** oleh build; jangan diedit tangan.
-- `build.js` — pembaca geotag + penyusun data dari `photos/`.
-- `photos/` — tempat menaruh foto (input, sumber kebenaran tebakan).
+- `build.js` — pembaca geotag + penyusun data dari `photos/`, sekaligus mengompres foto ke `photos-web/`.
+- `photos/` — tempat menaruh foto asli (input, sumber kebenaran tebakan & arsip resolusi penuh).
+- `photos-web/` — **dihasilkan otomatis** oleh build; versi terkompresi (maks 1600px, JPEG q78)
+  yang benar-benar dipakai game supaya ganti-ronde tidak lelet. Jangan diedit tangan.
 - `hints.json` — petunjuk per lokasi: `{ "Nama Lokasi": "teks petunjuk" }` (nama harus sama persis).
 - `overrides.json` — koreksi manual untuk foto **tanpa** geotag atau bila ingin memaksa nilai:
   `{ "namafile.jpg": { "lat": .., "lng": .., "name": "..", "hint": ".." } }`
@@ -91,5 +93,6 @@ itu bagian dari aset situsnya (bukan cuma alat build):
 - Peta hanya menampilkan tile untuk area yang sudah diunduh & dikunci ke area kampus UNDIP (lihat
   `AREA_BOUNDS` di `index.html`, zoom 15–18 saat main). Kalau perlu memperluas area, ubah
   `AREA_BOUNDS` di `index.html` **dan** `download-tiles.js`, lalu jalankan ulang `npm run tiles`.
-- Nama lokasi (field `name`) tetap disimpan di data untuk keperluan pengelolaan katalog, tapi
-  sengaja **tidak ditampilkan ke pemain** (baik di layar hasil maupun ringkasan akhir).
+- Nama lokasi ditampilkan ke pemain di layar hasil & ringkasan akhir (membantu mengenal
+  nama gedung/fakultas). Sebagian nama di `overrides.json` masih berupa perkiraan (dari
+  landmark terdekat) untuk foto yang lokasinya generik — koreksi kapan saja lewat `overrides.json`.
