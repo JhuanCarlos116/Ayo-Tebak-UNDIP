@@ -214,8 +214,7 @@
   }
   .row:last-child{border-bottom:none}
   .row .n{font-family:'Space Mono',monospace;color:var(--slate);font-size:12px;width:26px}
-  .row .nm{flex:1}
-  .row .d{font-family:'Space Mono',monospace;color:var(--slate);font-size:12px}
+  .row .d{flex:1;font-family:'Space Mono',monospace;color:var(--slate);font-size:12px}
   .row .p{font-family:'Space Mono',monospace;font-weight:700;width:64px;text-align:right}
 
   /* Leaflet marker labels */
@@ -637,7 +636,6 @@ function endGame(){
   $('grade').textContent=g;
   $('breakdown').innerHTML=state.results.map((r,i)=>
     `<div class="row"><span class="n mono">${String(i+1).padStart(2,'0')}</span>
-     <span class="nm">${escapeHtml(r.name)}</span>
      <span class="d mono">${fmtDist(r.dist)}</span>
      <span class="p mono">${r.pts.toLocaleString('id-ID')}</span></div>`).join('');
   saveLeaderboardEntry(state.username, state.total);
